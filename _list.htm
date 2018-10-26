@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>DEMO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, minimal-ui"/>
+<style>
+*{margin:0px; padding:0px; font-family:Meiryo, "Meiryo UI";  -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box;}
+.wrapper{max-width:600px; width:100%; padding:20px; margin:0 auto;}
+h1{background:#000; color:#fff; font-weight:normal; padding:10px; margin-bottom:20px;}
+ul{list-style:none;}
+
+
+li{font-size:24px; margin-bottom:20px; }
+li:nth-child(even){ background:#eee;}
+a:link, a:visited{color:#000; text-decoration:none;}
+.pic_tip{ width:200px; height:200px; overflow:hidden;  border:2px solid #fff; box-shadow:0px 0px 5px rgba(0,0,0,0.5); position:absolute; left:-220px; top:0; display:none;/*初始*/  }
+.pic_tip img{ width:100%; height:auto; }
+</style>
+</head>
+<body>
+
+	<div class="wrapper">
+		<h1>Demo</h1>
+		<ul class="nav"></ul>
+		<div class="pic_tip"><img src=""></div>
+	</div>
+
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery.csv.js"></script>
+
+	<script>
+		$(function () {
+
+			var oMyData;
+			$.ajax({
+				url: "mydata.csv",
+				async: false,
+				success: function (csvd) {
+					oMyData = $.csv.toObjects(csvd);
+				},
+				dataType: "text"
+			});
+
+			var sTxt = ``;
+			oMyData.forEach(function(d){
+				sTxt += `<li>■ <a href="_page.htm?id=${d.id}">${d.title}</a></li>`;
+			});
+
+			$("ul.nav").html(sTxt);
+
+			$("ul.nav li").hover(
+				function(){$(".pic_tip").fadeIn()},
+				function(){$(".pic_tip").hide()},
+			);
+
+			$("ul.nav li").mousemove(function(e){
+				$(".pic_tip img").attr("src", `images/${oMyData[$(this).index()].pic}`)
+				$(".pic_tip").css({left:e.pageX+20, top:e.pageY+20});
+			});
+
+
+		});
+	</script>
+</body>
+</html>
