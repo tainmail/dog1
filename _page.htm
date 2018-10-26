@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<style>
+	*{margin:0px; padding:0px; font-family:'微軟正黑體'; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box;}
+	.clearfix:after{content:'.'; display:block; height:0; clear:both; visibility:hidden;}
+	pre{border:2px solid pink; padding:5px; font-size:12px; background:#fff; clear:both; font-size:12px; font-family:Verdana;}
+	pre strong{color:#CC0000;}
+	pre em{font-style:normal; font-weight:bold; color:#006600;}
+
+	.wrapper{ margin:0 auto;  border:0px solid red; text-align: center; }
+	.wrapper img{}
+	
+	</style>
+
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery.csv.js"></script>
+
+<script>
+
+	//取網址
+	function fnGetUrlVar(argKey){
+		var sUrlVar = window.location.search.substring(1);
+		var aVar_1 = sUrlVar.split("&");
+		for (var i=0; i<aVar_1.length; i++) {
+			var aVar_2 = aVar_1[i].split("=");
+			if(aVar_2[0] == argKey){
+				return aVar_2[1];
+			}
+		}
+		return false;
+	}
+
+
+	$(function () {
+
+		var oMyData;
+		var myid = fnGetUrlVar("id") || 0; //預設第一則
+		$.ajax({
+			url: "mydata.csv",
+			async: false,
+			success: function (csvd) {
+				oMyData = $.csv.toObjects(csvd);
+			},
+			dataType: "text"
+		});
+
+		console.log(oMyData[myid]);
+
+		var sTxt =
+			`
+			<a href="_list.htm">
+				<img src="images/${oMyData[myid].pic}" title="${oMyData[myid].title}">
+			</a>
+			`;
+
+		$(".wrapper").html(sTxt);
+
+		document.title = oMyData[myid].title;
+
+	});
+</script>
+</head>
+<body>
+
+	<div class="wrapper"></div>
+
+</body>
+</html>
